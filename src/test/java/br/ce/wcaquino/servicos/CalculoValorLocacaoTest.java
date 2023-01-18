@@ -69,5 +69,8 @@ public class CalculoValorLocacaoTest {
 		
 		//verificacao
 		assertThat(resultado.getValor(), is(valorLocacao));
+
+		// só para comprar que o Before e o After vem antes da bateria de testes
+//		System.out.println("!!!!!");
 	}
 }
