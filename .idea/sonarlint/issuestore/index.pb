@@ -37,9 +37,6 @@ b
 2.metadata/.plugins/org.eclipse.ui.intro/introstate,f\2\f2266d19ac6564e36f29afa2dad7157a89a57777
 `
 0.metadata/.plugins/org.eclipse.m2e.logback/0.log,3\c\3cb82731b9991b62d1a58b4a82374762c0ed1145
-:
-
-.gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
 z
 J.metadata/.plugins/org.eclipse.m2e.logback/logback.2.1.0.20221015-0744.xml,e\b\ebbf75065a45f1b8e226f7d4050114c2d03307a6
 8
