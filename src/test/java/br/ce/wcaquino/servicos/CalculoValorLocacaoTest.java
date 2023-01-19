@@ -9,16 +9,16 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import br.ce.wcaquino.builders.UsuarioBuilder;
-import br.ce.wcaquino.daos.LocacaoDAO;
-import br.ce.wcaquino.daos.LocacaoDAOFake;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+import org.mockito.Mockito;
 
+import br.ce.wcaquino.daos.LocacaoDAO;
+import br.ce.wcaquino.daos.LocacaoDAOFake;
 import br.ce.wcaquino.entidades.Filme;
 import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
@@ -29,6 +29,10 @@ import br.ce.wcaquino.exceptions.LocadoraException;
 public class CalculoValorLocacaoTest {
 
 	private LocacaoService service;
+
+	private LocacaoDAO dao;
+
+	private SPCService spc;
 	
 	@Parameter
 	public List<Filme> filmes;
@@ -42,8 +46,11 @@ public class CalculoValorLocacaoTest {
 	@Before
 	public void setup(){
 		service = new LocacaoService();
-		LocacaoDAO dao = new LocacaoDAOFake();
+		dao = Mockito.mock(LocacaoDAO.class);
 		service.setLocacaoDAO(dao);
+
+		spc = Mockito.mock(SPCService.class);
+		service.setSpcService(spc);
 	}
 	
 	private static Filme filme1 = umFilme().agora();
@@ -76,8 +83,5 @@ public class CalculoValorLocacaoTest {
 		
 		//verificacao
 		assertThat(resultado.getValor(), is(valorLocacao));
-
-		// só para comprar que o Before e o After vem antes da bateria de testes
-//		System.out.println("!!!!!");
 	}
 }
