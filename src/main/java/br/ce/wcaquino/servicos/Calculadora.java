@@ -24,8 +24,7 @@ public class Calculadora {
 	}
 	
 	public static void main(String[] args) {
-
-		//new Calculadora().divide("a", "b");
+		new Calculadora().divide("a", "b");
 	}
 
 }

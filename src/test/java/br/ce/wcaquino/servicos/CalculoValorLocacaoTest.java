@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import com.sun.tracing.dtrace.ModuleAttributes;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,35 +17,33 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import br.ce.wcaquino.daos.LocacaoDAO;
-import br.ce.wcaquino.daos.LocacaoDAOFake;
 import br.ce.wcaquino.entidades.Filme;
 import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
 import br.ce.wcaquino.exceptions.FilmeSemEstoqueException;
 import br.ce.wcaquino.exceptions.LocadoraException;
-import org.mockito.MockitoAnnotations;
 
 @RunWith(Parameterized.class)
 public class CalculoValorLocacaoTest {
 
 	@InjectMocks
 	private LocacaoService service;
-
+	
 	@Mock
-	public LocacaoDAO dao;
-
+	private LocacaoDAO dao;
+	
 	@Mock
-	public SPCService spc;
-
+	private SPCService spc;
+	
 	@Parameter
 	public List<Filme> filmes;
-
+	
 	@Parameter(value=1)
 	public Double valorLocacao;
-
+	
 	@Parameter(value=2)
 	public String cenario;
 	
