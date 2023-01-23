@@ -14,7 +14,7 @@ public class UsuarioBuilder {
 		builder.usuario.setNome("Usuario 1");
 		return builder;
 	}
-
+	
 	public UsuarioBuilder comNome(String nome) {
 		usuario.setNome(nome);
 		return this;
