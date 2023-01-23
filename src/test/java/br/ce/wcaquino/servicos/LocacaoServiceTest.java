@@ -13,8 +13,7 @@ import static br.ce.wcaquino.utils.DataUtils.obterDataComDiferencaDias;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -28,6 +27,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import br.ce.wcaquino.daos.LocacaoDAO;
@@ -37,13 +38,17 @@ import br.ce.wcaquino.entidades.Usuario;
 import br.ce.wcaquino.exceptions.FilmeSemEstoqueException;
 import br.ce.wcaquino.exceptions.LocadoraException;
 import br.ce.wcaquino.utils.DataUtils;
+import org.mockito.MockitoAnnotations;
 
 public class LocacaoServiceTest {
 
+	@InjectMocks
 	private LocacaoService service;
-	
+	@Mock
 	private SPCService spc;
+	@Mock
 	private LocacaoDAO dao;
+	@Mock
 	private EmailService email;
 	
 	@Rule
@@ -54,13 +59,7 @@ public class LocacaoServiceTest {
 	
 	@Before
 	public void setup(){
-		service = new LocacaoService();
-		dao = Mockito.mock(LocacaoDAO.class);
-		service.setLocacaoDAO(dao);
-		spc = Mockito.mock(SPCService.class);
-		service.setSPCService(spc);
-		email = Mockito.mock(EmailService.class);
-		service.setEmailService(email);
+		MockitoAnnotations.initMocks(this);
 	}
 	
 	@Test
@@ -156,17 +155,27 @@ public class LocacaoServiceTest {
 	public void deveEnviarEmailParaLocacoesAtrasadas(){
 		//cenario
 		Usuario usuario = umUsuario().agora();
+		Usuario usuario2 = umUsuario().comNome("Usuario em dia").agora();
+		Usuario usuario3 = umUsuario().comNome("Outro atrasado").agora();
+
 		List<Locacao> locacoes = Arrays.asList(
-				umLocacao()
-					.comUsuario(usuario)
-					.comDataRetorno(obterDataComDiferencaDias(-2))
-					.agora());
+				umLocacao().comUsuario(usuario).atrasado().agora(),
+				umLocacao().comUsuario(usuario2).agora(),
+				umLocacao().comUsuario(usuario3).atrasado().agora());
+
 		when(dao.obterLocacoesPendentes()).thenReturn(locacoes);
 		
 		//acao
 		service.notificarAtrasos();
+		// verifiqye que seram realizados duas execuções ao método notificarAtraso
+		verify(email, Mockito.times(2)).notificarAtraso(Mockito.any(Usuario.class));
 		
 		//verificacao
+		// checkando se dois e-mails foram enviados e garantindo que quem não deveria receber e-mail não esta recebendo
 		verify(email).notificarAtraso(usuario);
+		//verify(email, Mockito.times(2)).notificarAtraso(usuario3);
+		verify(email, Mockito.atLeastOnce()).notificarAtraso(usuario3);
+		verify(email, Mockito.never()).notificarAtraso(usuario2);
+		verifyNoMoreInteractions(email);
 	}
 }
